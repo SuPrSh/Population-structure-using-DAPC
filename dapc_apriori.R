@@ -15,7 +15,16 @@ dapc1 <- dapc(data, grp, n.pca = optim.a.score(tmp)$best, n.da = K - 1)
 round(cumsum(dapc1$eig) / sum(dapc1$eig) * 100, 1)   # % discrimination on axis
 
 col <- funky(K)                  # or c("orange", "green", ...) length K
+lab <- c("Pali", "Baroli", "Nadigaon", "Tigri")
+ids <- indNames(data)
 
+#----Scatter with cluster labels
+scatter(dapc1, col = col, label = lab, clabel = 1, cstar = 1, cellipse = 1.5,
+        pch = 20, cex = 2.5, solid = 0.5, bg = "white",
+        scree.pca = TRUE, posi.pca = "topright", posi.da = "topleft",
+        ratio.pca = 0.18, ratio.da = 0.18)
+
+#----Plot othe LDs
 #----LD1 vs LD2, labelled by location
 scatter(dapc1, xax = 1, yax = 2, col = col, label = levels(grp), clabel = 0.8,
         cstar = 0, cellipse = 1.5, pch = 20, cex = 2, solid = 0.6, bg = "white",
