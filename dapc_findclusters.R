@@ -1,12 +1,16 @@
 library(adegenet)
 set.seed(123)
-#---load data
-data <- import2genind("infile_mugger.gtx", missing=0, quiet=FALSE)
+#----Load genepop file: skip this if you have gtx file
+data <- read.genepop("infile-GENEPOP.gen", ncode = 3)   # ncode = digits per allele (2 or 3)
 data
-
 #--sanity check for pop and individuals
-nPop(data)              # number of populations
-table(pop(data))        # individuals per population
+nPop(data1)              # number of populations
+table(pop(data1))        # individuals per population
+levels(pop(data1)) <- c("Site1", "Site2", "Site3", "Site4")
+
+#---load gtx file: DO NOT RUN LINE 12 and 13 if you load from genepop file
+#data <- import2genind("infile_mugger.gtx", missing=0, quiet=FALSE)
+#data
 
 #---- User-defined K, PCs and DAs
 grp <- find.clusters(data, n.pca = nInd(data) - 1, max.n.clust = 40)   # pick K at BIC elbow
@@ -41,12 +45,13 @@ scatter(dapc3, col = col, label = lab, clabel = 1, cstar = 0,
         pch = 20, cex = 1.5, solid = 0.5, bg = "white", scree.da = FALSE)
 text(dapc3$ind.coord[, 1], dapc3$ind.coord[, 2], ids, cex = 0.5, pos = 3)
 
-## 3. Membership probabilities with individual IDs
+#----Membership probabilities with individual IDs
 compoplot(dapc3, col.pal = function(k) col, show.lab = TRUE, lab = ids,
           txt.leg = lab, n.col = K, posi = "bottomright")
 
-## 4. Assignment plot
+#----Assignment plot
 assignplot(dapc3)
+
 #----Save main figure
 jpeg("dapc_denovo.jpeg", width = 8, height = 8, units = "in", res = 500)
 scatter(dapc2, col = col, label = levels(grp), clabel = 0.8, cstar = 0,
