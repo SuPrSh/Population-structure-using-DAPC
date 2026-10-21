@@ -4,9 +4,9 @@ set.seed(123)
 data <- read.genepop("infile-GENEPOP.gen", ncode = 3)   # ncode = digits per allele (2 or 3)
 data
 #--sanity check for pop and individuals
-nPop(data1)              # number of populations
-table(pop(data1))        # individuals per population
-levels(pop(data1)) <- c("Site1", "Site2", "Site3", "Site4")
+nPop(data)              # number of populations
+table(pop(data))        # individuals per population
+levels(pop(data)) <- c("Site1", "Site2", "Site3", "Site4")
 
 #---load gtx file: DO NOT RUN LINE 12 and 13 if you load from genepop file
 #data <- import2genind("infile_mugger.gtx", missing=0, quiet=FALSE)
