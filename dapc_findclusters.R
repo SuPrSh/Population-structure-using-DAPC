@@ -14,18 +14,20 @@ levels(pop(data)) <- c("Site1", "Site2", "Site3", "Site4")
 
 #---- User-defined K, PCs and DAs
 grp <- find.clusters(data, n.pca = nInd(data) - 1, max.n.clust = 40)   # pick K at BIC elbow
-table(pop(data), grp$grp)
-K <- nlevels(grp$grp)
-
+table(pop(data), grp$grp) #individual distribution acrosss cluster
+K <- nlevels(grp$grp)     #assigning cluster
 dapc2 <- dapc(data, grp$grp)          # interactive: choose PCs, then DAs
-
 summary(dapc2)
-scatter(dapc2, posi.da = "topleft", scree.pca = TRUE, posi.pca = "topright",
-        bg.inset = "white", ratio.da = .18, ratio.pca = .18)
+col <- funky(K)            # auto choose colors or use col <- c("#1F78B4", "#33A02C", "#E31A1C", "#FF7F00", "#6A3D9A")
+scatter(dapc2, posi.da = "bottomleft", scree.pca = TRUE, posi.pca = "topright",
+        bg.inset = "white", ratio.da = .18, ratio.pca = .18, col = col, clabel = 0.7, cstar = 1.0, cellipse = 1.5,
+        pch = 20, cex = 2, solid = 0.9, bg = "white") #change eigenvalue inset position by changing "topright" to any positin you like e.g "bottomright"
+dev.copy(jpeg, "dapc2A.jpeg", width = 10, height = 10, units = "in", res = 500); dev.off() #run to save image
 
 #----DAPC with number of PCs chosen by a-score
-tmp  <- dapc(data, grp$grp, n.pca = 40, n.da = K - 1)       # enough PCs to test 1:40
-asc  <- optim.a.score(tmp, n.pca = 1:40, n.sim = 100)
+maxPC <- min(40, nInd(data) - 1)
+tmp   <- dapc(data, grp$grp, n.pca = maxPC, n.da = K - 1)
+asc   <- optim.a.score(tmp, n.pca = 1:maxPC, n.sim = 100)
 best <- max(asc$best, 2)                                    # avoid the 1-PC artefact
 
 dapc3 <- dapc(data, grp$grp, n.pca = best, n.da = K - 1)
@@ -36,25 +38,12 @@ lab <- paste("Cluster", 1:K)             # or c("BA-NG-GD", "...", ...), length 
 ids <- indNames(data)
 
 #--Scatter with cluster
-scatter(dapc3, col=col, posi.da = "topleft", scree.pca = TRUE, posi.pca = "topright",
-        bg.inset = "white", ratio.da = .18, ratio.pca = .18)
-
-
-#--Scatter with individual IDs (no insets, so text() lands correctly)
-scatter(dapc3, col = col, label = lab, clabel = 1, cstar = 0,
-        pch = 20, cex = 1.5, solid = 0.5, bg = "white", scree.da = FALSE)
-text(dapc3$ind.coord[, 1], dapc3$ind.coord[, 2], ids, cex = 0.5, pos = 3)
-
-#----Membership probabilities with individual IDs
-compoplot(dapc3, col.pal = function(k) col, show.lab = TRUE, lab = ids,
-          txt.leg = lab, n.col = K, posi = "bottomright")
+scatter(dapc3, posi.da = "bottomleft", scree.pca = TRUE, posi.pca = "topright",
+        bg.inset = "white", ratio.da = .18, ratio.pca = .18, col = col, clabel = 0.5, cstar = 1.0, cellipse = 1.5,
+        pch = 20, cex = 2, solid = 0.9, bg = "white")
+dev.copy(jpeg, "dapc3A.jpeg", width = 8, height = 8, units = "in", res = 500); dev.off() #run to save image
 
 #----Assignment plot
 assignplot(dapc3)
-
-#----Save main figure
-jpeg("dapc_denovo.jpeg", width = 8, height = 8, units = "in", res = 500)
-scatter(dapc2, col = col, label = levels(grp), clabel = 0.8, cstar = 0,
-        cellipse = 1.5, pch = 20, cex = 2, solid = 0.6, bg = "white",
-        scree.da = FALSE, scree.pca = TRUE, posi.pca = "bottomright", ratio.pca = 0.18)
+dev.copy(jpeg, "assignment.jpeg", width = 10, height = 10, units = "in", res = 500); dev.off() #run to save image
 dev.off()
