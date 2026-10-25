@@ -21,7 +21,7 @@ summary(dapc2)
 col <- funky(K)            # auto choose colors or use col <- c("#1F78B4", "#33A02C", "#E31A1C", "#FF7F00", "#6A3D9A")
 scatter(dapc2, posi.da = "bottomleft", scree.pca = TRUE, posi.pca = "topright",
         bg.inset = "white", ratio.da = .18, ratio.pca = .18, col = col, clabel = 0.7, cstar = 1.0, cellipse = 1.5,
-        pch = 20, cex = 2, solid = 0.9, bg = "white") #change eigenvalue inset position by changing "topright" to any positin you like e.g "bottomright"
+        pch = 20, cex = 2, solid = 0.9, bg = "white") #change eigenvalue inset position by changing "topright" to any position you like e.g. "bottomright" "bottomleft"
 dev.copy(jpeg, "dapc2A.jpeg", width = 10, height = 10, units = "in", res = 500); dev.off() #run to save image
 
 #----DAPC with number of PCs chosen by a-score
